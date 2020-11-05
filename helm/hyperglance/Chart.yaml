@@ -1,0 +1,22 @@
+apiVersion: v2
+name: hyperglance
+version: 0.2.1
+appVersion: 6.7.8
+description: Cloud visualisation, Security and Compliance monitoring system
+keywords:
+  - cloud
+  - aws
+  - azure
+  - k8
+  - kubernetes
+  - visualisation
+  - security
+  - compliance
+  - monitoring
+  - cost
+  - documentation
+home: https://www.hyperglance.com
+icon: https://assets.website-files.com/5f241c43481ea21770682e40/5f36b08be484ac7d1fc7fec9_hyperglance-logo.jpg
+maintainers:
+- name: Dave Gilmore
+  email: dgilmore@hyperglance.com

@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "hyperglance.fullname" . }}
+  labels:
+    app: {{ template "hyperglance.name" . }}
+    chart: {{ template "hyperglance.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.servicehttp.port }}
+      targetPort: 80
+      protocol: TCP
+      name: http
+    - port: {{ .Values.servicehttps.port }}
+      targetPort: 443
+      protocol: TCP
+      name: https
+  selector:
+    app: {{ template "hyperglance.name" . }}

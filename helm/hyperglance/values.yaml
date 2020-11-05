@@ -1,0 +1,59 @@
+# Default values for hyperglance.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# Replicas
+replicaCount: 1
+
+# Container Images
+imagePullPolicy: Always
+restartPolicy: Always
+
+install:
+  image: hyperglance/centos8
+  tag: latest
+
+postgresql:
+  image: hyperglance/postgresql
+  tag: latest
+
+httpd:
+  image: hyperglance/httpd
+  tag: latest
+
+wildfly:
+  image: hyperglance/wildfly
+  tag: latest
+
+
+# Hyperglance HTTPD Service
+service:
+  type: LoadBalancer
+
+servicehttp:
+  port: 80
+
+servicehttps:
+  port: 443
+
+
+# Config Map
+samlEnabled: false
+
+resources: {}
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ingress:
+  enabled: false
