@@ -18,16 +18,16 @@ Pleae follow the [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kub
 
 Use the following Guide to install [HELM](https://helm.sh/docs/intro/install/) .
 
-### Clone / Download the repository
+### Clone the repository or Download the latest Release
 
-Clone the repository:
+To Clone the repository:
 
 ```bash
 mkdir code && cd code
 git clone https://github.com/hyperglance/kubernetes.git
 ```
 
-Download the [Zip](https://github.com/hyperglance/kubernetes/archive/v0.2.1.zip) release, and extract it.
+To Download the [Zip](https://github.com/hyperglance/kubernetes/archive/v0.2.1.zip) release, and extract it.
 
 ### Create a namespace (Optional)
 
