@@ -31,7 +31,7 @@ Download the [Zip](https://github.com/hyperglance/kubernetes/archive/v0.2.1.zip)
 
 ### Create a namespace (Optional)
 
-You may wish to deploy Hyperglance to its own [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), this is notnormally required for small K8 deployments.
+You may wish to deploy Hyperglance to its own [namespace](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/), this is not normally required for small K8 deployments.
 
 To create one, execute the following commands:
 
