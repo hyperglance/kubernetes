@@ -27,7 +27,7 @@ mkdir code && cd code
 git clone https://github.com/hyperglance/kubernetes.git
 ```
 
-Download the [Zip](https://github.com/hyperglance/kubernetes/archive/v1.0.zip) release, and extract it.
+Download the [Zip](https://github.com/hyperglance/kubernetes/archive/v0.2.1.zip) release, and extract it.
 
 ### Create a namespace (Optional)
 
