@@ -136,14 +136,16 @@ spec:
     spec:
       initContainers:
       - name: install
-        image: hyperglance/centos8
-        command: ['sh', '-c', '[ -d /mnt/data/rules ] && exit 0; mkdir -p /mnt/data/rules /mnt/data/httpd_logs /mnt/data/wildfly_logs /mnt/data/mellon && touch /mnt/data/email.properties /mnt/data/hg.bin && echo h6ZRHkSWoPZFAZCnm0Lx2EPOzQ3qeyR2oAziMLxQKKyUKky+lKJfYhbdE4T0dIhgcnSrUy/65dhOAXlDFdyegIVe1EVURapOJNVhPNA04R5ZNKDheFFK7YjR2UIz3LiWt4vGTf89uCKxDonM1QSxL88dg/e+oVicBlS4Zm6x636B/1igeHmo60sTZ7NwMLwavoXwdlgSxM4QJA1FeSu3SBCnrr2uTThNP9Nqfu0YbwKxMGAy+HwdPb7MXzfq6HOEyPbe0sp6zBzng/1x1R0+f14OklQQQOZ/Hi3W+W+nGs8a0sJHgFGZ9RxH6MVP5nnYYBGCgnFuNHBnjeSJtRwU8XZBKHszyu6bmo+Yq57u90x4yAQwaSYqOxc0FNYFNKF+316xvOZGOwHsEDWQqDfIRec08UeciJZngje5Le3xsDULXpNWlrJkox6xIrXXoq7zSC0qS/fzon2ghwlVu/zBjCSIvt8lqatdoyH4d9eNBYcFIjka4QOp1BzMP39H5NuEXe78tI1ZJ5iMRKAMeoeOxmvvhYRBpQ7tlbmyYZgcr5j3h2yeVHC/luiFdFVgHFMaeKxIEKS1+m2e3S5MfKUOsv/8TayvmYHFlA4HX6rdjd9UfjvBVSgy9mNmxDjdt62JV04/x4Oy4QRfFtGYjvGXFIIKi3M48eTK7lqtUo0r0ioGb1EDSQtVAb3r3Pjb9LL9NNau5zBZBkCiZ3uf/+M3mJchWjp/Qaga3j9hRytJYRARmVSkLFblM3OiIodpmTcplqjuBW7O9F/Jd0AhX02iKyY9vrfmW5dN3dA4fd7rYecjS0mRIHl4h3BwDbRD3Lzt7tLj5zb3suHBvhkMjnP1wA== > /mnt/data/hg.bin && chown -R 333: /mnt/data && chown root: /mnt/data/httpd_logs']
+        image: busybox
+        command: ['sh', '-c', '[ -d /mnt/data/rules ] && exit 0; mkdir -p /mnt/data/rules /mnt/data/httpd_logs /mnt/data/wildfly_logs /mnt/data/mellon && touch /mnt/data/email.properties /mnt/data/hg.bin && echo h6ZRHkSWoPZFAZCnm0Lx2EPOzQ3qeyR2oAziMLxQKKyUKky+lKJfYhbdE4T0dIhgcnSrUy/65dhOAXlDFdyegIVe1EVURapOJNVhPNA04R5ZNKDheFFK7YjR2UIz3LiWt4vGTf89uCKxDonM1QSxL88dg/e+oVicBlS4Zm6x636B/1igeHmo60sTZ7NwMLwavoXwdlgSxM4QJA1FeSu3SBCnrr2uTThNP9Nqfu0YbwKxMGAy+HwdPb7MXzfq6HOEyPbe0sp6zBzng/1x1R0+f14OklQQQOZ/Hi3W+W+nGs8a0sJHgFGZ9RxH6MVP5nnYYBGCgnFuNHBnjeSJtRwU8XZBKHszyu6bmo+Yq57u90x4yAQwaSYqOxc0FNYFNKF+316xvOZGOwHsEDWQqDfIRec08UeciJZngje5Le3xsDULXpNWlrJkox6xIrXXoq7zSC0qS/fzon2ghwlVu/zBjCSIvt8lqatdoyH4d9eNBYcFIjka4QOp1BzMP39H5NuEXe78tI1ZJ5iMRKAMeoeOxmvvhYRBpQ7tlbmyYZgcr5j3h2yeVHC/luiFdFVgHFMaeKxIEKS1+m2e3S5MfKUOsv/8TayvmYHFlA4HX6rdjd9UfjvBVSgy9mNmxDjdt62JV04/x4Oy4QRfFtGYjvGXFIIKi3M48eTK7lqtUo0r0ioGb1EDSQtVAb3r3Pjb9LL9NNau5zBZBkCiZ3uf/+M3mJchWjp/Qaga3j9hRytJYRARmVSkLFblM3OiIodpmTcplqjuBW7O9F/Jd0AhX02iKyY9vrfmW5dN3dA4fd7rYecjS0mRIHl4h3BwDbRD3Lzt7tLj5zb3suHBvhkMjnP1wA== > /mnt/data/hg.bin && chown -R 333: /mnt/data && chown root: /mnt/data/httpd_logs && mkdir -p /var/lib/pgsql/data']
 
         volumeMounts:
         - name: hyperglance-data
           mountPath: /mnt/data
           readOnly: false
-
+        - name: postgresql-data
+          mountPath: /var/lib/pgsql
+          readOnly: false
       containers:
       - name: postgresql
         image: hyperglance/postgresql:latest
