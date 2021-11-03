@@ -16,3 +16,5 @@ data:
   NON_PROXY_HOSTS: 'localhost|127.*|[::1]|169.254.169.254'
   # CONFIG_FORCE_persist_attributes: 'true'
   # CONFIG_FORCE_persist_topology: 'true'
+  # AWS_COST_BUCKET: 'billing-bucket'
+  # AWS_COST_MARKETPLACE: 'true'

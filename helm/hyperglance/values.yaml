@@ -10,7 +10,7 @@ imagePullPolicy: Always
 restartPolicy: Always
 
 install:
-  image: hyperglance/centos8
+  image: busybox
   tag: latest
 
 postgresql:
