@@ -14,7 +14,7 @@ Please follow the below steps to install the pre-requisites required to deploy H
 
 ### Install Kubectl
 
-Pleae follow the [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl/) guide to get up and running with kubectl.
+Please follow the [Kubernetes](https://kubernetes.io/docs/tasks/tools/install-kubectl/) guide to get up and running with kubectl.
 
 ### Install Helm (Optional)
 
