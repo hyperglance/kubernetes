@@ -1,0 +1,247 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hyperglance
+  labels:
+    app: hyperglance
+spec:
+  ports:
+  - port: 443
+    targetPort: 443
+    protocol: TCP
+    name: https
+  type: NodePort
+  selector:
+    app: hyperglance
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hyperglance
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/backend-protocol: "HTTPS"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
+    alb.ingress.kubernetes.io/ssl-redirect: '443'
+    alb.ingress.kubernetes.io/certificate-arn: '<ACM Certificate ARN>' # [REQUIRED] Set to the ARN of the certificate in ACM you wish to use for the load balancer
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: hyperglance
+                port: 
+                  number: 443
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hyperglance-env
+  labels:
+    app: hyperglance
+data:
+  SAML_ENABLED: 'false'
+  PROXY_HOST: ''
+  PROXY_PORT: '3128'
+  PROXY_USER: ''
+  PROXY_PASSWORD: ''
+  NON_PROXY_HOSTS: 'localhost|127.*|[::1]|169.254.169.254'
+  # CONFIG_FORCE_persist_attributes: 'true'
+  # CONFIG_FORCE_persist_topology: 'true'
+  # AWS_COST_BUCKET: 'eo-test-bucket'
+  # AWS_COST_MARKETPLACE: 'true'
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: hyperglance-httpd-ssl
+  labels:
+    app: hyperglance
+stringData:
+  hyperglance.crt: |-
+    -----BEGIN CERTIFICATE-----
+    MIIDVDCCAjygAwIBAgIJAI/kNmmHcVLKMA0GCSqGSIb3DQEBCwUAMFExFDASBgNV
+    BAMMC0h5cGVyZ2xhbmNlMRkwFwYDVQQKDBBIeXBlcmdsYW5jZSBJbmMuMREwDwYD
+    VQQHDAhTYW4gSm9zZTELMAkGA1UEBhMCVVMwHhcNMjAxMDI5MTIyNjI5WhcNMjEx
+    MTIzMTIyNjI5WjBRMRQwEgYDVQQDDAtIeXBlcmdsYW5jZTEZMBcGA1UECgwQSHlw
+    ZXJnbGFuY2UgSW5jLjERMA8GA1UEBwwIU2FuIEpvc2UxCzAJBgNVBAYTAlVTMIIB
+    IjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAs5/jnRTs8a2jjlvOFzq9HyD1
+    WiMqkA9T/PZB+otf8k16ts5ghd0fRzLQQX9uTV/ewKoIHENYFWURhzPmrEFbYYAb
+    f6pkq0nv4dl7ifCiSsg1bIGnq5ZeWXmgOT9r4j1BRmXF4sztLSVcpkFi6h/3DebU
+    0T+vb/umwTHOnRIfb2nRnGabzVRI5JkIGdGQZaHahx3OPV9fIareKdsdiysy0fWD
+    DULmnZTXcTzxzc62cJG0aye719f9i0Yc+uhEel377vceG7V7qEr8xmrtpUFUrsF6
+    BW69jljJgocu0OnfrHHLL9ZH1tZW36f8P/bP72cQk3169nXFDOpGfKoLUdjfPQID
+    AQABoy8wLTAWBgNVHREEDzANggtIeXBlcmdsYW5jZTATBgNVHSUEDDAKBggrBgEF
+    BQcDATANBgkqhkiG9w0BAQsFAAOCAQEACOyJoCXQNHld/Feba433mq39a+CR1rqX
+    KIF8EusJshQSn1rFIU5khhnmOQMAOb2xFpp5656nFA/fsMXvsUzDlNm0G3NdGERG
+    svqwpfHPFtQdyjwFtV8CmPB/DacJgc5PGuYuVm8JzYa2SleqQl0ehw9r38F87ktV
+    Ycdg0ykAVphT+d2CknH+MXBXpQRpG1KGiL1EKOqvay4fgFFklHpG2NxLNMC4eCCf
+    XE71KPpeNy5sXH24j0c5eFmfIJ+Ce+CdMxvlQvOU0WB6pNfzwo80n7Gv8HZJcvBk
+    Uik8Pm8rGh65JyaXkpp4AeOZpoeDYjht7DFF344WUu0T6+D/s4jz+A==
+    -----END CERTIFICATE-----
+
+  hyperglance.key: |-
+    -----BEGIN PRIVATE KEY-----
+    MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCzn+OdFOzxraOO
+    W84XOr0fIPVaIyqQD1P89kH6i1/yTXq2zmCF3R9HMtBBf25NX97AqggcQ1gVZRGH
+    M+asQVthgBt/qmSrSe/h2XuJ8KJKyDVsgaerll5ZeaA5P2viPUFGZcXizO0tJVym
+    QWLqH/cN5tTRP69v+6bBMc6dEh9vadGcZpvNVEjkmQgZ0ZBlodqHHc49X18hqt4p
+    2x2LKzLR9YMNQuadlNdxPPHNzrZwkbRrJ7vX1/2LRhz66ER6Xfvu9x4btXuoSvzG
+    au2lQVSuwXoFbr2OWMmChy7Q6d+sccsv1kfW1lbfp/w/9s/vZxCTfXr2dcUM6kZ8
+    qgtR2N89AgMBAAECggEAPPSlaUkQn3MtbcH5zihAxa+Jk20bpIePGOj4uu1RQgjI
+    /ABNASBo3OCBi7iS1e8SyI7q8axo19nUeO1D+nCzcgLnUgug3f/ZR+tl4QmoCXin
+    qIrXO4NrwTFlDghXtA7Vd+5RmQWx9wAW0NSfnJP8YttSnS/feUEM9cLROrxLrqLI
+    rYl/ACVrpsbgQ07sqm70/gXQiqvVO0+1hflsWLTKob0t3GEWXDnSUZPXDo4qvx0d
+    57P8rpMworp1cyCqHLsqbAVlqz7QxkY40qUiJSQTCcJh/1pazaACHmaVm4dgpocm
+    pCieQkFkrfGiBmU4YIm3PD1gTYX4mHylbMAiREP8AQKBgQDgd9vnnsCylkGITbsJ
+    kvixEHzNiJ72JiXhtJ7d32kdHWB04DL1t2zVIm99xiyIIvtehGZh2+OlrKFzf0oE
+    Y2Sy1zzWz/2HuL9r1GuxC0olEXSb6zWCpUSVuXwHYJdGsB1I1nZeV4BxucmBs/PM
+    WSs+3OpyXmpGyn/a+polp1xE6QKBgQDM22Z2MF4KkA/1jO0WjdSiIZnWKBXeCLkY
+    8HV/7DSaDOUs0qVGBIrtLlE4stqdY/c+o+D6jaLysNc3I7KKhoWK8ZsiRQlnK1Id
+    XfIa9reNYh5SHHnCAFgqOgaA7B8Sv3adG69yZY4sD+E93JiTiyjCit9SIzULuMdE
+    WvQZLwTjNQKBgGdeSuJq9QpIr3z5bryF9gh0M0TjOXDZOHCsIMzD6UADGzw3UsBc
+    671q0jT1YeR/V4q7JfrCrB7LVL4/S/KhYuoIvHef6Hzr0xrxA3bQYCCZ3T1AH7A+
+    M0tP05ICJSfkSlgUiwX+/aNhjy4vlIHyPjwAt+ZbHE3lSuOoq/vTCmahAoGAClCx
+    5BmjYpzGcPLbrVsO7esLOAFkuH1v9JWHFR3ruCYWFB+3OsNXy4GdjWFUKMCz3m+a
+    EIO5RMcqzxf5EYiciNaJnTwksRE5XUkxu7HYpEHgjPnqF5600cuCMFOzbNo/OsH+
+    H6CFfCqAiQDmnedP8hvUCurC7Qgs4IBD8lCvylECgYEAqQPEEP/3iPVh+HAqLn3X
+    CbZ0YOgZsE9QFmJCYmkF4f/g91PchuvV2T7ZoKqOyL+uu6z0OeoSznungujFPtSb
+    MDdKyiZ79TCgFvFY5p8EZaVOKGmXVw5DOBjdfAJepG/rrgu8uIWi4MoVASqED34U
+    Z2R6WaUqf1v+UMjqc404G/w=
+    -----END PRIVATE KEY-----
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: hyperglance
+spec:
+  selector:
+    matchLabels:
+      app: hyperglance
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: hyperglance
+    spec:
+      initContainers:
+      - name: install
+        image: busybox
+        command: ['sh', '-c', '[ -d /mnt/data/rules ] && exit 0; mkdir -p /mnt/data/rules /mnt/data/httpd_logs /mnt/data/wildfly_logs /mnt/data/mellon && touch /mnt/data/email.properties /mnt/data/hg.bin && echo h6ZRHkSWoPZFAZCnm0Lx2EPOzQ3qeyR2oAziMLxQKKyUKky+lKJfYhbdE4T0dIhgcnSrUy/65dhOAXlDFdyegIVe1EVURapOJNVhPNA04R5ZNKDheFFK7YjR2UIz3LiWt4vGTf89uCKxDonM1QSxL88dg/e+oVicBlS4Zm6x636B/1igeHmo60sTZ7NwMLwavoXwdlgSxM4QJA1FeSu3SBCnrr2uTThNP9Nqfu0YbwKxMGAy+HwdPb7MXzfq6HOEyPbe0sp6zBzng/1x1R0+f14OklQQQOZ/Hi3W+W+nGs8a0sJHgFGZ9RxH6MVP5nnYYBGCgnFuNHBnjeSJtRwU8XZBKHszyu6bmo+Yq57u90x4yAQwaSYqOxc0FNYFNKF+316xvOZGOwHsEDWQqDfIRec08UeciJZngje5Le3xsDULXpNWlrJkox6xIrXXoq7zSC0qS/fzon2ghwlVu/zBjCSIvt8lqatdoyH4d9eNBYcFIjka4QOp1BzMP39H5NuEXe78tI1ZJ5iMRKAMeoeOxmvvhYRBpQ7tlbmyYZgcr5j3h2yeVHC/luiFdFVgHFMaeKxIEKS1+m2e3S5MfKUOsv/8TayvmYHFlA4HX6rdjd9UfjvBVSgy9mNmxDjdt62JV04/x4Oy4QRfFtGYjvGXFIIKi3M48eTK7lqtUo0r0ioGb1EDSQtVAb3r3Pjb9LL9NNau5zBZBkCiZ3uf/+M3mJchWjp/Qaga3j9hRytJYRARmVSkLFblM3OiIodpmTcplqjuBW7O9F/Jd0AhX02iKyY9vrfmW5dN3dA4fd7rYecjS0mRIHl4h3BwDbRD3Lzt7tLj5zb3suHBvhkMjnP1wA== > /mnt/data/hg.bin && chown -R 333: /mnt/data && chown root: /mnt/data/httpd_logs && mkdir -p /var/lib/pgsql/data']
+
+        volumeMounts:
+        - name: hyperglance-data
+          mountPath: /mnt/data
+          readOnly: false
+        - name: postgresql-data
+          mountPath: /var/lib/pgsql
+          readOnly: false
+      containers:
+      - name: postgresql
+        image: hyperglance/postgresql:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "250m"
+          limits:
+            memory: "4Gi"
+            cpu: "1000m"
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /var/lib/pgsql
+          readOnly: false
+
+      - name: httpd
+        image: hyperglance/httpd:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "500Mi"
+            cpu: "250m"
+          limits:
+            memory: "2Gi"
+            cpu: "500m"
+        envFrom:
+        - configMapRef:
+            name: hyperglance-env
+
+        volumeMounts:
+        - name: httpd-ssl
+          mountPath: /etc/httpd/ssl
+          readOnly: true
+
+        - name: hyperglance-data
+          mountPath: /etc/httpd/mellon
+          subPath: mellon
+          readOnly: false
+
+        - name: hyperglance-data
+          mountPath: /var/log/httpd
+          subPath: httpd_logs
+          readOnly: false
+
+      - name: wildfly
+        image: hyperglance/wildfly:latest
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "500m"
+          limits:
+            memory: "8Gi"
+            cpu: "2000m"
+        envFrom:
+        - configMapRef:
+            name: hyperglance-env
+
+        volumeMounts:
+        - name: hyperglance-data
+          mountPath: /var/lib/hyperglance/rules
+          subPath: rules
+          readOnly: false
+
+        - name: hyperglance-data
+          mountPath: /opt/wildfly/standalone/deployments/hgs.ear/lib/common.jar/email.properties
+          subPath: email.properties
+          readOnly: false
+
+        - name: hyperglance-data
+          mountPath: /opt/wildfly/standalone/data/hg.bin
+          subPath: hg.bin
+          readOnly: false
+
+        - name: hyperglance-data
+          mountPath: /opt/wildfly/standalone/log
+          subPath: wildfly_logs
+          readOnly: false
+
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: hyperglance-postgresql-data
+
+      - name: httpd-ssl
+        secret:
+          secretName: hyperglance-httpd-ssl
+
+      - name: hyperglance-data
+        persistentVolumeClaim:
+          claimName: hyperglance-data
+
+      restartPolicy: Always
+      dnsPolicy: ClusterFirst
+      hostAliases:
+      - ip: '127.0.0.1'
+        hostnames:
+        - 'httpd'
+        - 'wildfly'
+        - 'postgresql'

@@ -1,0 +1,7 @@
+Please allow up to 5 minutes for the pod to provision and become available on the load balancer
+
+1. Get the Application Load Balancer address by running this command:
+
+kubectl get ingress hyperglance
+
+This will provide you with the ALB address, which you can use to access Hyperglance.

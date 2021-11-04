@@ -1,0 +1,87 @@
+# Default values for hyperglance.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+# EFS storage [REQUIRED]
+
+efs:
+  filesystem_id: fs-xxxx
+  postgresql:
+    accesspoint_id: fsap-xxxx
+  hyperglance:
+    accesspoint_id: fsap-xxxx
+
+# Load balancer certificate - [REQUIRED]
+albCertificateArn: arn:aws:acm:xxxx
+
+# Container resource constraints
+resources:
+  postgresql:
+    requests:
+      memory: "2Gi"
+      cpu: "250m"
+    limits:
+      memory: "4Gi"
+      cpu: "1000m"
+  httpd:
+    requests:
+      memory: "500Mi"
+      cpu: "250m"
+    limits:
+      memory: "2Gi"
+      cpu: "500m"
+  wildfly:
+    requests:
+      memory: "4Gi"
+      cpu: "500m"
+    limits:
+      memory: "8Gi"
+      cpu: "2000m"
+
+# Container Images
+imagePullPolicy: Always
+restartPolicy: Always
+
+install:
+  image: busybox
+  tag: latest
+
+postgresql:
+  image: hyperglance/postgresql
+  tag: latest
+
+httpd:
+  image: hyperglance/httpd
+  tag: latest
+
+wildfly:
+  image: hyperglance/wildfly
+  tag: latest
+
+
+# Hyperglance HTTPD Service
+service:
+  type: NodePort
+
+servicehttps:
+  port: 443
+
+
+# Config Map
+samlEnabled: false
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+ingress:
+  enabled: false

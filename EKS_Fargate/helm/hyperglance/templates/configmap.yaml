@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: "{{ .Release.Name }}-env"
+  labels:
+    app: {{ template "hyperglance.name" . }}
+    chart: {{ template "hyperglance.chart" . }}
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+data:
+  SAML_ENABLED: '{{ .Values.samlEnabled }}'
+  PROXY_HOST: ''
+  PROXY_PORT: '3128'
+  PROXY_USER: ''
+  PROXY_PASSWORD: ''
+  NON_PROXY_HOSTS: 'localhost|127.*|[::1]|169.254.169.254'
+  # CONFIG_FORCE_persist_attributes: 'true'
+  # CONFIG_FORCE_persist_topology: 'true'
+  # AWS_COST_BUCKET: 'billing-bucket'
+  # AWS_COST_MARKETPLACE: 'true'
