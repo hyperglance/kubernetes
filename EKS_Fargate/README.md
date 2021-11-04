@@ -10,7 +10,7 @@ This Repository contains a Kubernetes deployment and a helm chart that can be us
 
 This deployment assumes you already have the following pre-requisites satisfied:
 
-:information_source [This guide maybe useful in assisting you to satisfy these pre-requisites](https://aws.amazon.com/blogs/containers/running-stateful-workloads-with-amazon-eks-on-aws-fargate-using-amazon-efs/)
+:information_source: [This guide maybe useful in assisting you to satisfy these pre-requisites](https://aws.amazon.com/blogs/containers/running-stateful-workloads-with-amazon-eks-on-aws-fargate-using-amazon-efs/)
 
 1. A functioning AWS EKS using Fargate cluster - [AWS guide](https://docs.aws.amazon.com/eks/latest/userguide/fargate-getting-started.html) or [EKSCTL guide](https://eksctl.io/usage/fargate-support/)
 2. EKS ALB controller provisioned and configured - [AWS guide](https://aws.amazon.com/premiumsupport/knowledge-center/eks-alb-ingress-controller-fargate/)
@@ -157,6 +157,21 @@ kubectl get ingress hyperglance
 
 ```bash
 NAME          CLASS    HOSTS   ADDRESS                                                              
-hyperglance   <none>   *       k8s-default-hypergla-1dcb6e54d4-889129377.eu-west-3.elb.amazonaws.com
+hyperglance   <none>   *       <your_hostname>
 ```
 
+## Memory management - [guide](https://support.hyperglance.com/knowledge/memory-usage)
+
+If you exerience any OOM (out-of-memory) errors or are scaling up the container resources, you can adjust the MAX_HEAPSIZE values:
+
+Helm -  [values.yaml](helm/hyperglance/values.yaml)
+
+```yaml
+MAX_HEAPSIZE: '4096m' # Wildfly heap size setting - adjust accordingly
+```
+
+Kubectl - [hyperglance.yaml](kubectl/hyperglance.yaml)
+
+```yaml
+MAX_HEAPSIZE: '4096m'  # Wildfly heap size setting - adjust accordingly
+```

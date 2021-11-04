@@ -57,6 +57,7 @@ data:
   # CONFIG_FORCE_persist_topology: 'true'
   # AWS_COST_BUCKET: 'eo-test-bucket'
   # AWS_COST_MARKETPLACE: 'true'
+  MAX_HEAPSIZE: '4096m'  # Wildfly heap size setting - adjust accordingly
 ---
 apiVersion: v1
 kind: Secret

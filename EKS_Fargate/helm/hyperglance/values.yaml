@@ -69,6 +69,7 @@ servicehttps:
 
 # Config Map
 samlEnabled: false
+MAX_HEAPSIZE: '4096m' # Wildfly heap size setting - adjust accordingly
 
 autoscaling:
   enabled: false
