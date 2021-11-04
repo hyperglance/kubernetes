@@ -4,9 +4,11 @@
 
 This Repository contains a kubernetes deployment and a helm chart that can be used to deploy Hyperglance to your Kubernetes cluster.
 
-:information_source: This README assumes that you already have a Kubernetes Cluster deployed.
+:information source: If you're looking to deploy Hyperglance on EKS with Fargate, read our guide [here](https://github.com/hyperglance/kubernetes/tree/master/EKS_Fargate)
 
 ## Pre-Requisites
+
+:information_source: This README assumes that you already have a Kubernetes Cluster deployed.
 
 Please follow the below steps to install the pre-requisites required to deploy Hyperglance to K8.
 
