@@ -17,6 +17,7 @@ spec:
       labels:
         app: {{ template "hyperglance.name" . }}
     spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
       initContainers:
       - name: install
         image: "{{ .Values.install.image}}:{{ .Values.install.tag }}"

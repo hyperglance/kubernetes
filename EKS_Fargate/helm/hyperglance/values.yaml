@@ -14,6 +14,11 @@ efs:
 # Load balancer certificate - [REQUIRED]
 albCertificateArn: arn:aws:acm:xxxx
 
+# K8 service account
+serviceAccount:
+  name: hyperglance
+  iamRole: arn:aws:iam::xxxx # IAM role ARN the K8 service account will use to auth against AWS
+
 # Container resource constraints
 resources:
   postgresql:
@@ -70,6 +75,7 @@ servicehttps:
 # Config Map
 samlEnabled: false
 MAX_HEAPSIZE: '4096m' # Wildfly heap size setting - adjust accordingly
+RUNNING_IN: 'AWS' # Set to 'AWS' to enable K8 service account and IAM role assumption in Hyperglance
 
 autoscaling:
   enabled: false

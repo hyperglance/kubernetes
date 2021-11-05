@@ -15,7 +15,7 @@ spec:
    storageClassName: efs-sc
    claimRef:
       name: hyperglance-data
-      namespace: default
+      namespace: hyperglance
    csi:
       driver: efs.csi.aws.com
       volumeHandle: <EFS_Filesystem_ID>::<EFS_Accesspoint_ID> # [REQUIRED] Set these values for your deployment fs-075969c3793a0ce8d::fsap-0d583b9784be5fb4c
@@ -35,6 +35,9 @@ spec:
       - ReadWriteOnce
    persistentVolumeReclaimPolicy: Retain
    storageClassName: efs-sc
+   claimRef:
+      name: hyperglance-postgresql-data
+      namespace: hyperglance
    csi:
       driver: efs.csi.aws.com
       volumeHandle: <EFS_Filesystem_ID>::<EFS_Accesspoint_ID> # [REQUIRED] Set these values for your deployment e.g. fs-075969c3793a0ce8d::fsap-07f5c973018d10062

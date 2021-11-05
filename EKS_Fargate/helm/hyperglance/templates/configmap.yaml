@@ -18,4 +18,5 @@ data:
   # CONFIG_FORCE_persist_topology: 'true'
   # AWS_COST_BUCKET: 'billing-bucket'
   # AWS_COST_MARKETPLACE: 'true'
-  MAX_HEAPSIZE: '{{ .Values.MAX_HEAPSIZE}} '
+  MAX_HEAPSIZE: '{{ .Values.MAX_HEAPSIZE }}'
+  RUNNING_IN: '{{ .Values.RUNNING_IN }}'
