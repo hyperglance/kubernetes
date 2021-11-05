@@ -46,8 +46,10 @@ kubectl create ns hyperglance
 ### Create an IAM role and policy for Hyperglance
 
 Hyperglance will utilise the service account configured during setup, to poll AWS for resources.
-> Create a role, select the trusted entity as the OIDC provider created in the prerequisites and assign a policy with the permissions required for Hyperglance - [these can be found here](https://support.hyperglance.com/knowledge/aws-iam-policy-requirements)
-> We'll reduce the scope of this trust to only the service account we will create on EKS. On the newly created role in AWS IAM, edit the trust policy/trust relationship. It will look something like this by default:
+
+Create a role, select the trusted entity as the OIDC provider created in the prerequisites and assign a policy with the permissions required for Hyperglance - [these can be found here](https://support.hyperglance.com/knowledge/aws-iam-policy-requirements)
+
+We'll reduce the scope of this trust to only the service account we will create on EKS. On the newly created role in AWS IAM, edit the trust policy/trust relationship. It will look something like this by default:
 
 ```bash
 {
@@ -75,25 +77,29 @@ Change the line after string equals to the following, substituting  <namespace>,
 "StringEquals": {
           "oidc.eks.<AWS REGION>.amazonaws.com/id/183E80BB183AB94E102232070EDC4969:sub": "system:serviceaccount:<namespace>:<service-account-username>"
 }
+```
 
 Make a note of the ARN of the role. You will need to populate this value for your setup depending on your method of deployment:
 
-```
 ## Usage - Helm
 
 To deploy hyperglance using Helm, from the [helm directory](helm/) of the cloned repository:
 
-Edit [values.yaml](helm/hyperglance/values.yaml) and populate the required values with the certificate ARN, EFS filesystem ID and EFS accesspoint values you created previously:
+Edit [values.yaml](helm/hyperglance/values.yaml) and populate the required values with the IAM role ARN, certificate ARN, EFS filesystem ID and EFS accesspoint values you created previously:
 
 Helm - [values.yaml](helm/hyperglance/values.yaml)
+
+IAM Role ARN:
+
 ```yaml
 serviceAccount:
   name: hyperglance
   iamRole: <HERE> # IAM role K8 service account will use to auth against AWS
 ```
 
-# EFS storage [REQUIRED]
+EFS storage:
 
+```
 efs:
   filesystem_id: fs-xxxxxxxx
   postgresql:
@@ -101,15 +107,18 @@ efs:
   hyperglance:
     accesspoint_id: fsap-xxx
 
-# Load balancer certificate - [REQUIRED]
+```
+
+Load balancer certificate:
+
+```bash
 albCertificateArn: arn:aws:acm:xxxx
 ```
 
+Finally, go ahead and run the following to deploy to your EKS cluster:
+
 ```bash
-
-# Named Namespace
 helm install hyperglance hyperglance -n hyperglance
-
 ```
 *Allow up to 5 minutes for the pod to provision and become available*
 
@@ -121,7 +130,7 @@ Change to the directory containing the EKS_Fargate configuration:
 cd kubernetes/EKS_Fargate/kubectl
 ```
 
-Populate the service account ARN in [serviceaccount.yaml](kubectl/serviceaccount.yaml):
+Populate the IAM role ARN in [serviceaccount.yaml](kubectl/serviceaccount.yaml):
 ```yaml
  annotations:
    eks.amazonaws.com/role-arn: <HERE>
@@ -206,13 +215,6 @@ NAME          CLASS    HOSTS   ADDRESS
 hyperglance   <none>   *       <your_hostname>
 ```
 
-Login using the hostname of the ingress ALB. 
-
-Username: admin
-Password: admin
-
-It is highly recommended you [change the password](https://support.hyperglance.com/knowledge/how-to-change-hyperglance-login-password) once you login.
-
 ## Memory management - [guide](https://support.hyperglance.com/knowledge/memory-usage)
 
 If you exerience any OOM (out-of-memory) errors or are scaling up the container resources, you can adjust the MAX_HEAPSIZE values:
@@ -228,3 +230,17 @@ Kubectl - [hyperglance.yaml](kubectl/hyperglance.yaml)
 ```yaml
 MAX_HEAPSIZE: '4096m'  # Wildfly heap size setting - adjust accordingly
 ```
+
+## Login
+
+Login using the hostname of the ingress ALB. 
+
+Username: admin
+Password: admin
+
+It is highly recommended you [change the password](https://support.hyperglance.com/knowledge/how-to-change-hyperglance-login-password) once you login.
+
+Upon login, nou will need to go into settings and add your license.
+After that, go ahead and add your first AWS account. You can find a guide [here](https://support.hyperglance.com/knowledge/adding-new-aws-accounts-to-hyperglance#first_account_running_in_aws)
+
+:information_source: You will need to define the Role ARN that you created earlier when adding your AWS account to Hyperglance. This is due to the differences in setup between our Marketplace instances and K8s.
