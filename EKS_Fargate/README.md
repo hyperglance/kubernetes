@@ -2,7 +2,7 @@
 
 # Hyperglance - Kubernetes
 
-This Repository contains a Kubernetes deployment and a helm chart that can be used to deploy Hyperglance to your [AWS EKS using Fargate](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html) cluster. 
+This Repository contains a Kubernetes deployment and a helm chart that can be used to deploy Hyperglance to your [AWS EKS using Fargate](https://docs.aws.amazon.com/eks/latest/userguide/fargate.html){target="_blank"} cluster. 
 
 :warning: Deploying on EKS with Fargate is considerably different from a standard Kubernetes deployment and extensive prerequisites are required
 
