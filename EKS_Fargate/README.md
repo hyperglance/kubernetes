@@ -240,7 +240,7 @@ Password: admin
 
 It is highly recommended you [change the password](https://support.hyperglance.com/knowledge/how-to-change-hyperglance-login-password) once you login.
 
-Upon login, nou will need to go into settings and add your license.
+Upon login, you will need to go into settings and add your license.
 After that, go ahead and add your first AWS account. You can find a guide [here](https://support.hyperglance.com/knowledge/adding-new-aws-accounts-to-hyperglance#first_account_running_in_aws)
 
 :information_source: You will need to define the Role ARN that you created earlier when adding your AWS account to Hyperglance. This is due to the differences in setup between our Marketplace instances and K8s.
